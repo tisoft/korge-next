@@ -70,6 +70,19 @@ subprojects {
         apply(plugin = "kotlin-multiplatform")
         if (!project.path.startsWith(":samples")) {
             apply(plugin = "maven-publish")
+
+            configure<PublishingExtension> {
+                repositories {
+                    maven {
+                        name = "GitHubPackages"
+                        url = uri("https://maven.pkg.github.com/tisoft/korge-next")
+                        credentials {
+                            username = project.findProperty("gpr.user") as String? ?: System.getenv("USERNAME")
+                            password = project.findProperty("gpr.key") as String? ?: System.getenv("TOKEN")
+                        }
+                    }
+                }
+            }
         }
 
         kotlin {
