@@ -11,6 +11,7 @@ import com.soywiz.korio.lang.*
 import com.soywiz.korio.util.*
 import com.soywiz.korma.geom.*
 import kotlinx.coroutines.*
+import java.awt.Color
 import javax.swing.JFrame
 import kotlin.test.*
 
@@ -18,8 +19,12 @@ class TestE2eJava {
     @Test
     fun test() {
 
+        Runtime.getRuntime().load("/home/mheberling/.sdkman/candidates/java/11.0.2-open/lib/libjawt.so")
+
         val frame = JFrame()
+        frame.setBounds(100,100,100,100)
         val c = GLCanvas()
+        frame.contentPane.add(c)
         val gw = GLCanvasGameWindow(c)
         frame.isVisible = true
 
