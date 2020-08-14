@@ -2,17 +2,56 @@ package com.soywiz.korgw
 
 import com.soywiz.korag.*
 import com.soywiz.korev.*
+import com.soywiz.korgw.awt.AwtGameWindow
+import com.soywiz.korgw.awt.GLCanvas
+import com.soywiz.korgw.awt.GLCanvasGameWindow
 import com.soywiz.korim.bitmap.*
 import com.soywiz.korim.color.*
 import com.soywiz.korio.lang.*
 import com.soywiz.korio.util.*
 import com.soywiz.korma.geom.*
 import kotlinx.coroutines.*
+import javax.swing.JFrame
 import kotlin.test.*
 
 class TestE2eJava {
     @Test
     fun test() {
+
+        val frame = JFrame()
+        val c = GLCanvas()
+        val gw = GLCanvasGameWindow(c)
+        frame.isVisible = true
+
+        runBlocking {
+            gw.loop {
+                val ag = gw.ag
+                ag.onRender {
+                    try {
+                        ag.clear(Colors.DARKGREY)
+                        val vertices = ag.createVertexBuffer(floatArrayOf(
+                            -1f, -1f,
+                            -1f, +1f,
+                            +1f, +1f
+                        ))
+                        ag.draw(
+                            vertices,
+                            program = DefaultShaders.PROGRAM_DEBUG,
+                            type = AG.DrawType.TRIANGLES,
+                            vertexLayout = DefaultShaders.LAYOUT_DEBUG,
+                            vertexCount = 3,
+                            uniforms = AG.UniformValues(
+                                //DefaultShaders.u_ProjMat to Matrix3D().setToOrtho(0f, 0f, WIDTH.toFloat(), HEIGHT.toFloat(), -1f, +1f)
+                            )
+                        )
+                    } catch (e: Throwable) {
+                        e.printStackTrace()
+                    }
+                }
+                //println("HELLO")
+            }
+        }
+
         // @TODO: java.lang.IllegalStateException: Can't find opengl method glGenBuffers
         if (OS.isWindows) return
 
